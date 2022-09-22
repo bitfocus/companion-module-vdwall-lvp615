@@ -1,0 +1,31 @@
+{
+  "name": "vdwall-lvp615",
+  "version": "1.0.0",
+  "api_version": "1.0.0",
+  "description": "Module to control a VDWall LVP",
+  "main": "index.js",
+  "keywords": [
+    "VDWall",
+    "LVP615",
+    "Switch"
+  ],
+  "manufacturer": "VDWall",
+  "product": "LVP",
+  "shortname": "vdwall-lvp615",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Skyler Ehly <skyler@skylerjehly.com>",
+  "homepage": "https://github.com/bitfocus/companion-module-vdwall-lvp615#readme",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bitfocus/companion-module-vdwall-lvp615/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bitfocus/companion-module-vdwall-lvp615.git"
+  },
+  "devDependencies": {
+    "prettier": "2.7.1"
+  }
+}
