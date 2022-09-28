@@ -60,39 +60,26 @@ instance.prototype.init_connection = function () {
 		delete self.socket
 	}
 
-	if (!self.config.host) {
-		return
-	}
-
 	self.status(self.STATUS_WARNING, 'Connecting')
 
-	self.PromiseConnected = new Promise((resolve, reject) => {
-		self.socket = new tcp(self.config.host, self.config.port, { reconnect_interval: 5000 })
+	if (self.config.host) {
+		self.socket = new tcp(self.config.host, self.config.port)
 
-		self.socket.on('error', (err) => {
-			if (self.currentStatus !== self.STATUS_ERROR) {
-				// Only log the error if the module isn't already in this state.
-				// This is to prevent spamming the log during reconnect failures.
-				debug('Network error', err)
-				self.status(self.STATUS_ERROR, err)
-				self.log('error', `Network error: ${err.message}`)
-			}
-
-			reject(err)
+		self.socket.on('status_change', function (status, message) {
+			self.status(status, message)
 		})
 
-		self.socket.on('connect', () => {
+		self.socket.on('error', function (err) {
+			self.debug('Network error', err)
+			self.log('error', 'Network error: ' + err.message)
+			self.status(self.STATUS_ERROR, err)
+		})
+
+		self.socket.on('connect', function () {
 			self.status(self.STATUS_OK)
-			debug('Connected')
-			resolve()
+			self.debug('Connected')
 		})
-	}).catch((err) => {
-		// The error is already logged, but Node requires all rejected promises to be caught.
-	})
-
-	self.socket.on('status_change', (status, message) => {
-		self.status(status, message)
-	})
+	}
 }
 
 /**
@@ -138,20 +125,24 @@ instance.prototype.config_fields = function () {
 			regex: self.REGEX_IP,
 		},
 		{
-			type: 'textinput',
+			type: 'number',
 			id: 'port',
 			label: 'Target Port',
 			width: 4,
+			min: 1,
+			max: 65535,
 			default: 7,
-			regex: self.REGEX_PORT,
+			required: true,
 		},
 		{
-			type: 'textinput',
+			type: 'number',
 			id: 'sn',
 			label: 'Serial Number',
 			width: 4,
 			default: 0,
-			regex: self.REGEX_NUMBER,
+			min: 0,
+			max: 255,
+			required: true,
 		},
 	]
 }
